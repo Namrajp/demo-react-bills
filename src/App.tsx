@@ -49,9 +49,12 @@ function App() {
   const showAddCategory = () => {
     setShouldShowAddCategory(true);
   };
-
-  const [bills, setBills] = useState<Bill[]>([]);
   const [shouldShowAddBill, setShouldShowAddBill] = useState(true);
+
+  const showAddBill = () => {
+    setShouldShowAddBill(true);
+  };
+  const [bills, setBills] = useState<Bill[]>([]);
 
   //...
   const addBill = (amount: number, category: string, date: Date) => {
@@ -59,6 +62,14 @@ function App() {
     const updatedBills = [...(bills || []), bill];
     setBills(updatedBills);
     setShouldShowAddBill(false);
+    localStorage.setItem("bills", JSON.stringify(updatedBills));
+  };
+  const removeBill = (index: number) => {
+    let updatedBills = [...bills];
+    updatedBills = updatedBills
+      .slice(0, index)
+      .concat(updatedBills.slice(index + 1, updatedBills.length));
+    setBills(updatedBills);
     localStorage.setItem("bills", JSON.stringify(updatedBills));
   };
   return (
@@ -70,7 +81,11 @@ function App() {
       ) : (
         <div>
           <NavBar categories={categories} showAddCategory={showAddCategory} />
-          <BillsTable bills={bills} />
+          <BillsTable
+            bills={bills}
+            showAddBill={showAddBill}
+            removeBill={removeBill}
+          />
         </div>
       )}
     </div>
